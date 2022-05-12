@@ -66,25 +66,44 @@ register(
 )
 
 register(
-    id='AvoidanceRaad2022URSim-v0',
-    entry_point='robo_gym.envs:AvoidanceRaad2022URSim',
+    id='AvoidanceIros2021URSim-v0',
+    entry_point='robo_gym.envs:AvoidanceIros2021URSim',
 )
 
 register(
-    id='AvoidanceRaad2022URRob-v0',
-    entry_point='robo_gym.envs:AvoidanceRaad2022URRob',
+    id='AvoidanceIros2021URRob-v0',
+    entry_point='robo_gym.envs:AvoidanceIros2021URRob',
 )
 
 register(
-    id='AvoidanceRaad2022TestURSim-v0',
-    entry_point='robo_gym.envs:AvoidanceRaad2022TestURSim',
+    id='AvoidanceIros2021TestURSim-v0',
+    entry_point='robo_gym.envs:AvoidanceIros2021TestURSim',
 )
 
 register(
-    id='AvoidanceRaad2022TestURRob-v0',
-    entry_point='robo_gym.envs:AvoidanceRaad2022TestURRob',
+    id='AvoidanceIros2021TestURRob-v0',
+    entry_point='robo_gym.envs:AvoidanceIros2021TestURRob',
 )
 
 
+#Husky_ur3
 
+register(
+    id='NoObstacleNavigationHusky_ur3_Sim-v0',
+    entry_point='robo_gym.envs:NoObstacleNavigationHusky_ur3_Sim',
+)
 
+register(
+    id='NoObstacleNavigationHusky_ur3_Rob-v0',
+    entry_point='robo_gym.envs:NoObstacleNavigationHusky_ur3_Rob',
+)
+
+register(
+    id='ObstacleAvoidanceHusky_ur3_Sim-v0',
+    entry_point='robo_gym.envs:ObstacleAvoidanceHusky_ur3_Sim',
+)
+
+register(
+    id='ObstacleAvoidanceHusky_ur3_Rob-v0',
+    entry_point='robo_gym.envs:ObstacleAvoidanceHusky_ur3_Rob',
+)

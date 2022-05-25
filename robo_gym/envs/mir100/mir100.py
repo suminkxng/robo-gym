@@ -140,6 +140,7 @@ class Mir100Env(gym.Env):
         # Convert the state from Robot Server format to environment format
         self.state = self._robot_server_state_to_env_state(rs_state)
 
+
         # Check if the environment state is contained in the observation space
         if not self.observation_space.contains(self.state):
             raise InvalidStateError()
@@ -170,7 +171,7 @@ class Mir100Env(gym.Env):
         b_scan = [0.0] * 511
         collision = False
         obstacles = [0.0] * 9
-        rs_state = target + mir_pose + mir_twist + f_scan + b_scan + [collision] + obstacles
+        rs_state = target + mir_pose + mir_twist + f_scan + b_scan + [collision] + obstacles #18+1012 = 1020
 
         return len(rs_state)
 

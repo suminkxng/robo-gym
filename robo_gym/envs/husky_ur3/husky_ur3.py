@@ -31,7 +31,7 @@ class Husky_ur3_Env(gym.Env):
     """
 
     real_robot = False
-    laser_len = 717
+    laser_len = 542
     max_episode_steps = 500
   
     def __init__(self, rs_address=None, **kwargs):
@@ -45,9 +45,9 @@ class Husky_ur3_Env(gym.Env):
         self.seed()
         self.distance_threshold = 0.3
         self.min_target_dist = 1.0
-        # Maximum linear velocity (m/s) of MiR
+        # Maximum linear velocity (m/s) of Husky
         max_lin_vel = 1.0
-        # Maximum angular velocity (rad/s) of MiR
+        # Maximum angular velocity (rad/s) of Husky
         max_ang_vel = 0.7
         self.max_vel = np.array([max_lin_vel, max_ang_vel])
 
@@ -80,7 +80,6 @@ class Husky_ur3_Env(gym.Env):
         # Initialize environment state
         self.state = np.zeros(self._get_env_state_len())
         rs_state = np.zeros(self._get_robot_server_state_len())
-
         # Set Robot starting position
         if start_pose:
             assert len(start_pose)==3
@@ -166,12 +165,12 @@ class Husky_ur3_Env(gym.Env):
         """
 
         target = [0.0] * 3
-        mir_pose = [0.0] * 3
-        mir_twist = [0.0] * 2
-        scan = [0.0] * 700
+        husky_pose = [0.0] * 3
+        husky_twist = [0.0] * 2
+        scan = [0.0] * 542
         collision = False
         obstacles = [0.0] * 9
-        rs_state = target + mir_pose + mir_twist + scan  + [collision] + obstacles
+        rs_state = target + husky_pose + husky_twist + scan  + [collision] + obstacles # 3+3+2+542+1+9 = 560
 
         return len(rs_state)
 
@@ -187,9 +186,9 @@ class Husky_ur3_Env(gym.Env):
         """
 
         target_polar_coordinates = [0.0]*2
-        mir_twist = [0.0]*2
+        husky_twist = [0.0]*2
         laser = [0.0]*self.laser_len
-        env_state = target_polar_coordinates + mir_twist + laser
+        env_state = target_polar_coordinates + husky_twist + laser
 
         return len(env_state)
 
@@ -262,7 +261,7 @@ class Husky_ur3_Env(gym.Env):
         polar_theta = utils.normalize_angle_rad(polar_theta - rs_state[5])
 
         # Get Laser scanners data
-        raw_laser_scan = rs_state[8:723]
+        raw_laser_scan = rs_state[8:550]
 
         # Downsampling of laser values by picking every n-th value
         if self.laser_len > 0:
@@ -341,7 +340,7 @@ class Husky_ur3_Env(gym.Env):
 
         """
 
-        if rs_state[708] == 1:
+        if rs_state[550] == 1:
             return True
         else:
             return False
@@ -358,7 +357,7 @@ class Husky_ur3_Env(gym.Env):
         """
 
         threshold = 0.05
-        if min(rs_state[10:700]) < threshold:
+        if min(rs_state[8:550]) < threshold:
             return True
         else:
             return False
@@ -375,8 +374,8 @@ class NoObstacleNavigationHusky_ur3(Husky_ur3_Env):
 
         # Calculate distance to the target
         target_coords = np.array([rs_state[0], rs_state[1]])
-        mir_coords = np.array([rs_state[3],rs_state[4]])
-        euclidean_dist_2d = np.linalg.norm(target_coords - mir_coords, axis=-1)
+        husky_coords = np.array([rs_state[3],rs_state[4]])
+        euclidean_dist_2d = np.linalg.norm(target_coords - husky_coords, axis=-1)
 
         # Reward base
         base_reward = -50*euclidean_dist_2d
@@ -410,7 +409,7 @@ class NoObstacleNavigationHusky_ur3(Husky_ur3_Env):
         return reward, done, info
 
 class NoObstacleNavigationHusky_ur3_Sim(NoObstacleNavigationHusky_ur3, Simulation):
-    cmd = "roslaunch mir100_robot_server sim_robot_server.launch world_name:=empty_target_world.world"
+    cmd = "roslaunch husky_ur3_robot_server sim_robot_server.launch world_name:=empty_target_world.world"
     def __init__(self, ip=None, lower_bound_port=None, upper_bound_port=None, gui=False, **kwargs):
         Simulation.__init__(self, self.cmd, ip, lower_bound_port, upper_bound_port, gui, **kwargs)
         NoObstacleNavigationHusky_ur3.__init__(self, rs_address=self.robot_server_ip, **kwargs)
@@ -420,7 +419,7 @@ class NoObstacleNavigationHusky_ur3_Rob(NoObstacleNavigationHusky_ur3):
 
 
 class ObstacleAvoidanceHusky_ur3(Husky_ur3_Env):
-    laser_len = 20 # this part is contained on observation_space
+    laser_len = 100 # this part is contained on observation_space
 
     def reset(self, start_pose = None, target_pose = None):
         """Environment reset.
@@ -458,9 +457,9 @@ class ObstacleAvoidanceHusky_ur3(Husky_ur3_Env):
 
         # Generate obstacles positions
         self._generate_obstacles_positions()
-        rs_state[709:712] = self.sim_obstacles[0]
-        rs_state[712:715] = self.sim_obstacles[1]
-        rs_state[715:718] = self.sim_obstacles[2]
+        rs_state[551:554] = self.sim_obstacles[0]
+        rs_state[554:557] = self.sim_obstacles[1]
+        rs_state[557:560] = self.sim_obstacles[2]
 
         # Set initial state of the Robot Server
         state_msg = robot_server_pb2.State(state = rs_state.tolist())
@@ -492,8 +491,8 @@ class ObstacleAvoidanceHusky_ur3(Husky_ur3_Env):
 
         # Calculate distance to the target
         target_coords = np.array([rs_state[0], rs_state[1]])
-        mir_coords = np.array([rs_state[3],rs_state[4]])
-        euclidean_dist_2d = np.linalg.norm(target_coords - mir_coords, axis=-1)
+        husky_coords = np.array([rs_state[3],rs_state[4]])
+        euclidean_dist_2d = np.linalg.norm(target_coords - husky_coords, axis=-1)
 
         
         # Reward base
@@ -641,7 +640,7 @@ class ObstacleAvoidanceHusky_ur3(Husky_ur3_Env):
         self.sim_obstacles = [[x_0, y_0, yaw_0],[x_1, y_1, yaw_1],[x_2, y_2, yaw_2]]
 
 class ObstacleAvoidanceHusky_ur3_Sim(ObstacleAvoidanceHusky_ur3, Simulation):
-    cmd = "roslaunch mir100_robot_server sim_robot_server.launch world_name:=lab_6x8.world"          
+    cmd = "roslaunch husky_ur3_robot_server sim_robot_server.launch world_name:=lab_6x8.world"          
     def __init__(self, ip=None, lower_bound_port=None, upper_bound_port=None, gui=True, **kwargs):
         Simulation.__init__(self, self.cmd, ip, lower_bound_port, upper_bound_port, gui, **kwargs)
         ObstacleAvoidanceHusky_ur3.__init__(self, rs_address=self.robot_server_ip, **kwargs)

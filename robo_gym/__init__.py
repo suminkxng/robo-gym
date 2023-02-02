@@ -107,3 +107,10 @@ register(
     id='ObstacleAvoidanceHusky_ur3_Rob-v0',
     entry_point='robo_gym.envs:ObstacleAvoidanceHusky_ur3_Rob',
 )
+
+#Pedsim + Huksy_UR3
+
+register(
+    id='PedsimWithHusky_ur3_Sim-v0',
+    entry_point='robo_gym.envs:PedsimWithHusky_ur3_Sim',
+)

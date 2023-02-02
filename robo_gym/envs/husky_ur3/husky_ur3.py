@@ -410,7 +410,7 @@ class NoObstacleNavigationHusky_ur3(Husky_ur3_Env):
 
 class NoObstacleNavigationHusky_ur3_Sim(NoObstacleNavigationHusky_ur3, Simulation):
     cmd = "roslaunch husky_ur3_robot_server sim_robot_server.launch world_name:=empty_target_world.world"
-    def __init__(self, ip=None, lower_bound_port=None, upper_bound_port=None, gui=False, **kwargs):
+    def __init__(self, ip=None, lower_bound_port=None, upper_bound_port=None, gui=True, **kwargs):
         Simulation.__init__(self, self.cmd, ip, lower_bound_port, upper_bound_port, gui, **kwargs)
         NoObstacleNavigationHusky_ur3.__init__(self, rs_address=self.robot_server_ip, **kwargs)
 

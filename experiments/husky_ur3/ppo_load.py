@@ -7,11 +7,12 @@ import os
 # specify the ip of the machine running the robot-server
 target_machine_ip = '127.0.0.1' # or other xxx.xxx.xxx.xxx
 
-env = gym.make('ObstacleAvoidanceHusky_ur3_Sim-v0', ip=target_machine_ip, gui=True)
+env = gym.make('PedsimWithHusky_ur3_Sim-v0', ip=target_machine_ip, gui=True)
 env.reset()
 
-models_dir = "models/husky_obs2_PPO"
-model_path = f"{models_dir}/247000.zip"
+models_dir = "models/husky_obs_PPO/pedsim_obs_PPO_0201"
+# model_path = f"{models_dir}/247000.zip"
+model_path = f"{models_dir}/245000.zip"
 
 model = PPO.load(model_path, env=env)
 

@@ -15,3 +15,6 @@ from robo_gym.envs.ur.ur_avoidance_iros import AvoidanceIros2021TestURSim, Avoid
 # Husky_ur3
 from robo_gym.envs.husky_ur3.husky_ur3 import NoObstacleNavigationHusky_ur3_Sim, NoObstacleNavigationHusky_ur3_Rob
 from robo_gym.envs.husky_ur3.husky_ur3 import ObstacleAvoidanceHusky_ur3_Sim, ObstacleAvoidanceHusky_ur3_Rob
+
+# Pedsim + Husky_UR3
+from robo_gym.envs.husky_ur3.pedsim_husky_ur3 import PedsimWithHusky_ur3_Sim, PedsimWithHusky_ur3_Rob

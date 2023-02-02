@@ -17,7 +17,7 @@ if not os.path.exists(logdir):
     os.makedirs(logdir)
 
 # initialize environment
-env = gym.make('ObstacleAvoidanceHusky_ur3_Sim-v0', ip=target_machine_ip)
+env = gym.make('NoObstacleNavigationHusky_ur3_Rob-v0', ip=target_machine_ip)
 #env NoObstacleNavigationMir100Sim / ObstacleAvoidanceMir100Sim
 
 env.reset()
